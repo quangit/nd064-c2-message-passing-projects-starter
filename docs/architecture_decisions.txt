@@ -1,0 +1,5 @@
+Architecture Diagrams: Message Passing Strategy
+I noticed that the location service will be expecting a lot of data traffic from users' mobiles device's locations.
+ So gRPC messaging is suitable for it. in conjunction with asynchronous message technology like Kafka for better flow with the Postgres databases.
+With Connection Service and Person Service, there is not much dependency on it,
+ designing a RESTful API would be suitable in this case since it's necessary to get and post data via HTTP and its lesser complexity
