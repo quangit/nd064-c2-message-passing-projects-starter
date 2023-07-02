@@ -7,8 +7,8 @@ import logging
 from config import DB_USERNAME, DB_HOST, DB_NAME, DB_PORT, DB_PASSWORD
 
 TOPIC_NAME = 'location'
-KAFKA_URL = 'my-cluster.kafka.svc.cluster.local:9092'
-messages = KafkaConsumer(TOPIC_NAME, bootstrap_servers=[KAFKA_URL])
+KAFKA_URL = 'localhost:9093'
+messages = KafkaConsumer(TOPIC_NAME, bootstrap_servers=[KAFKA_URL], api_version=(0,11,5))
 
 
 def _add_to_location(location: Dict):

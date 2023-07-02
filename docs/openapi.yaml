@@ -1,63 +1,265 @@
 openapi: 3.0.0
 info:
-  description: Query person information in UdaConnect.
+  description: UdaConnect application APIs
   version: "1.0.0"
-  title: Person API
+  title: UdaConnect Persons, LOcations and Connections API endpoint
 paths:
-  /api/person/{person_id}:
-    get:
-      summary: Retrieve a person from UdaConnect
-      operationId: getPerson
-      description: By passing person_id you can retrieve the person information
-      parameters:
-        - in: path
-          name: person_id
-          schema:
-            type: integer
-          required: true
-          description: ID of the person to get
+  "/api/persons":
+    post:
+      summary: Creates a new Person 
+      operationId: CreatePersonResource
+      description: Creates a new Person.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePerson'
+        description: Person resource being added
       responses:
-        '200':
-          description: Successfully retrieved a person
+        '201':
+          description: Successfully created the new Person
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/person'
-        '500':
-          description: Internal Server Error
-  /api/person:
+                $ref: '#/components/schemas/CreatePerson'
+        '400':
+          description: 'Invalid input, object invalid'
     get:
-      summary: Retrieve persons in UdaConnect
-      operationId: getPersons
-      description: retrieve person informations in UdaConnect
+      description: Get all People 
       responses:
         '200':
-          description: Successfully retrieved person informations
+          description: Get all People 
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/person'
-        '500':
-          description: Internal Server Error
+                type: object
+                properties: {}
+              examples:
+                '0':
+                  value: >
+                    [{"id": 5, "company_name": "Alpha Omega Upholstery",
+                    "first_name": "Taco", "last_name": "Fargo"}, {"id": 6,
+                    "company_name": "USDA", "first_name": "Frank", "last_name":
+                    "Shader"}, {"id": 1, "company_name": "Hampton, Hampton and
+                    McQuill", "first_name": "Pam", "last_name": "Trexler"},
+                    {"id": 8, "company_name": "Paul Badman & Associates",
+                    "first_name": "Paul", "last_name": "Badman"}, {"id": 9,
+                    "company_name": "The Chicken Sisters Restaurant",
+                    "first_name": "Otto", "last_name": "Spring"}, {"id": 2,
+                    "company_name": "Tender Juicy", "first_name": "Aljur",
+                    "last_name": "Abrenica"}, {"id": 3, "company_name":
+                    "Momzillas", "first_name": "Kylie", "last_name": "Padilla"},
+                    {"id": 4, "company_name": "Chick Fillet", "first_name":
+                    "AJ", "last_name": "Raval"}]
+  '/api/persons/{person_id}':
+    parameters:
+      - in: path
+        description: get a person by id
+        name: person_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetPerson'
+    get:
+      summary: get a person by id
+      operationId: getPersonResource
+      description: get a person by id
+      responses:
+        '200':
+          description: a person is returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetPersons'
+        '400':
+          description: Invalid input parameter
+  "/api/locations":
+    post:
+      summary: Creates a new Location
+      operationId: CreateLocationResource
+      description: Creates a new Location
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLocation'
+        description: Location resource being added
+      responses:
+        '201':
+          description: Successfully created a new location
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLocation'
+        '400':
+          description: 'Invalid input'
+  '/api/locations/{location_id}':
+    parameters:
+      - in: path
+        description: get localtion by id
+        name: location_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetLocation'
+    get:
+      summary: get localtion by id
+      operationId: getLocationResource
+      description: get localtion by id
+      responses:
+        '200':
+          description: a localtion is returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetLocation'
+        '400':
+          description: Invalid input parameter
+  '/api/persons/{person_id}/connection{start_date}&{end_date}&{distance}':
+    parameters:
+      - in: path
+        description: Unique ID for a given Person
+        name: person_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetConnection'
+      - in: path
+        description: Start Date Parameter for the querry request
+        name: start_date
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetConnection'
+      - in: path
+        description: End Date Parameter for the querry request
+        name: end_date
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetConnection'
+      - in: path
+        description: The distance between locations and connections
+        name: distance
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetConnection'
+    get:
+      summary: Retrieves a Connection on UdaConnect
+      operationId: getConnectionResource
+      description: Retrieves a Connection in UdaConnect
+      responses:
+        '200':
+          description: Get a specific Connections per Person
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetConnection'
+        '400':
+          description: Invalid input parameter
 components:
   schemas:
-    person:
+    GetPersons:
       type: object
       required:
+        - id
         - first_name
         - last_name
-        - id
         - company_name
       properties:
+        id:
+          type: string
+          example: "9"
         first_name:
           type: string
-          example: "Pam"
+          example: 'Pitson'
         last_name:
           type: string
-          example: "Trexler"
-        id:
-          type: integer
-          example: 1
+          example: 'Mwakabila'
         company_name:
-         type: string
-         example: "Hampton, Hampton and McQuill"
+          type: string
+          example: 'TechNix Malawi'
+    CreatePerson:
+      type: object
+      required:
+        - id
+        - first_name
+        - last_name
+        - company_name
+      properties:
+        id:
+          type: string
+          example: "90"
+        first_name:
+          type: string
+          example: 'Liveness'
+        last_name:
+          type: string
+          example: 'Banda'
+        company_name:
+          type: string
+          example: 'KCH'
+    GetPerson:
+      type: string
+      example: 'Example: /api/persons/8'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          example: "8"
+    GetConnection:
+      type: string
+      example: 'Example: /api/persons/8/connection?start_date=2021-09-01&end_date=2021-10-17&distance=9'
+      required:
+        - person_id
+        - start_date
+        - end_date
+        - distance
+      properties:
+        person_id:
+          type: string
+          example: "8"
+        start_date:
+          type: string
+          example: '2021-08-11'
+        end_date:
+          type: string
+          example: '2021-12-31'
+        distance:
+          type: string
+          example: "8"
+    CreateLocation:
+      type: object
+      required:
+        - person_id
+        - creation_time
+        - latitude
+        - longitude
+      properties:
+        person_id:
+          type: string
+          example: "9"
+        creation_time:
+          type: string
+          example: '2021-10-17T10:37:06'
+        latitude:
+          type: string
+          example: "-2.200083"
+        longitude:
+          type: string
+          example: "1.55363"
+    GetLocation:
+      type: string
+      example: 'Example: /api/location/45'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          example: "5"
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/QUANG11T1/UdaProject2/1.0.0
