@@ -77,11 +77,57 @@ Afterwards, you can test that `kubectl` works by running a command like `kubectl
 
 ### Steps
 1. `kubectl apply -f deployment/db-configmap.yaml` - Set up environment variables for the pods
+
 2. `kubectl apply -f deployment/db-secret.yaml` - Set up secrets for the pods
+
 3. `kubectl apply -f deployment/postgres.yaml` - Set up a Postgres database running PostGIS
+
 4. `kubectl apply -f deployment/udaconnect-api.yaml` - Set up the service and deployment for the API
-5. `kubectl apply -f deployment/udaconnect-app.yaml` - Set up the service and deployment for the web app
-6. `sh scripts/run_db_command.sh <POD_NAME>` - Seed your database against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`)
+
+5. `kubectl apply -f deployment/udaconnect-connection.yaml` - Set up the service and deployment for the connection API
+
+6. `kubectl apply -f deployment/udaconnect-app.yaml` - Set up the service and deployment for the web app
+
+7. `kubectl apply -f deployment/udaconnect-location-consumer.yaml` - Set up the consumer service of the location microservice.
+
+8. `kubectl apply -f deployment/udaconnect-location-producer` - Set up the producer service of the location microservice.
+
+9. `kubectl apply -f deployment/udaconnect-persons` - Set up the service of the persons api and microservice.
+
+10. `sh scripts/run_db_command.sh <POD_NAME>` - Seed your database against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`)
+
+11. Install and run kafka.
+	- Download Kafka and as a compressed .tgz file from https://dlcdn.apache.org/kafka/3.5.0/kafka_2.13-3.5.0.tgz
+	
+	- Extract the compressed kafka file.
+	
+	  ```bash
+	  $ tar -xzf kafka_2.13-3.5.0.tgz
+	  $ cd kafka_2.13-3.5.0
+	  ```
+	
+	- Start the Zookeeper service in the command line.
+	
+	  ```bash
+	  $ bin/zookeeper-server-start.sh config/zookeeper.properties
+	  ```
+	
+	- Start the Kafka broker in the command line.
+	
+	  ```bash
+	  $ bin/kafka-server-start.sh config/server.properties
+	  ```
+	
+	- Create a Kafka Topic named `location` using the `bin/kafka-topics.sh` script.
+	
+	  ```bash
+	  $ bin/kafka-topics.sh --create --topic location --bootstrap-server localhost:9093
+	  ```
+	
+	  
+	
+
+
 
 Manually applying each of the individual `yaml` files is cumbersome but going through each step provides some context on the content of the starter project. In practice, we would have reduced the number of steps by running the command against a directory to apply of the contents: `kubectl apply -f deployment/`.
 

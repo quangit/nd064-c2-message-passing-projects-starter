@@ -1,0 +1,51 @@
+{
+	"info": {
+		"_postman_id": "6888c98e-9fd3-43b4-a326-bbc8907dda86",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "840120"
+	},
+	"item": [
+		{
+			"name": "Get all people",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:30010/api/persons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "30010",
+					"path": [
+						"api",
+						"persons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a person by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:30010/api/persons/9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "30010",
+					"path": [
+						"api",
+						"persons",
+						"9"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
